@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Училища{% endblock %}
+
+{% block content %}
+<h2>Списък с училища</h2>
+
+<table class="table table-striped">
+    <a href="{{ url_for('admin.add_school') }}" class="btn btn-success w-100">Добави</a>
+    <thead>
+        <tr>
+            <th>Име</th>
+            <th>Адрес</th>
+            <th>Град</th>
+            <th>Директор</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} mt-2">{{ message }}</div>
+            {% endfor %}
+        {% endwith %}
+        {% for school in schools %}
+        <tr>
+            <td>{{ school.name }}</td>
+            <td>{{ school.address }}</td>
+            <td>{{ school.city }}</td>
+            <td>
+                {% if school.director %}
+                    {{ school.director.user.first_name }} {{ school.director.user.last_name }}
+                {% else %}
+                    няма
+                {% endif %}
+            </td>
+            <td>
+                <form action="{{ url_for('admin.delete_school', school_id=school.id) }}" method="post" style="display:inline;">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    {% if confirm_school_id == school.id %}
+                        <input type="hidden" name="confirm" value="true">
+                        <button type="submit" class="btn btn-danger btn-sm">Потвърди изтриването</button>
+                    {% else %}
+                        <button type="submit" class="btn btn-outline-danger btn-sm">Изтрий</button>
+                    {% endif %}
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('admin.admin_dashboard_view') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

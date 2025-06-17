@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Статистика{% endblock %}
+{% block content %}
+<h2>Статистика за оценки</h2>
+
+<h4>Средна оценка за училището: {{ avg_grade | round(2) }}</h4>
+
+<h5 class="mt-4">По предмети</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Предмет</th>
+            <th>Средна оценка</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for name, avg in grades_by_course %}
+        <tr>
+            <td>{{ name }}</td>
+            <td>{{ avg | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h5 class="mt-4">По учители</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Учител</th>
+            <th>Средна оценка</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for first, last, avg in grades_by_teacher %}
+        <tr>
+            <td>{{ first }} {{ last }}</td>
+            <td>{{ avg | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h5 class="mt-4">По класове</h5>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Клас</th>
+            <th>Средна оценка</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for class_name, avg in grades_by_class %}
+        <tr>
+            <td>{{ class_name }}</td>
+            <td>{{ avg | round(2) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<div class="mt-4">
+    <a href="{{ url_for('director.director_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Назад
+    </a>
+</div>
+{% endblock %}
+
+

@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}Табло на директор{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Табло на директор</h2>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <!-- Преподаватели -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-chalkboard-teacher fa-2x mb-3 text-primary"></i>
+                <h5 class="card-title">Преподаватели</h5>
+                <a href="{{ url_for('director.director_teachers') }}" class="btn btn-outline-primary mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ученици -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-user-graduate fa-2x mb-3 text-success"></i>
+                <h5 class="card-title">Ученици</h5>
+                <a href="{{ url_for('director.director_students') }}" class="btn btn-outline-success mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Родители
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-user-friends fa-2x mb-3 text-dark"></i>
+                <h5 class="card-title">Родители</h5>
+                <a href="{{ url_for('director.director_parents') }}" class="btn btn-outline-dark mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div> -->
+
+    <!-- Предмети -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-book fa-2x mb-3 text-warning"></i>
+                <h5 class="card-title">Предмети</h5>
+                <a href="{{ url_for('director.director_courses') }}" class="btn btn-outline-warning mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Програма -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-alt fa-2x mb-3 text-info"></i>
+                <h5 class="card-title">Програма</h5>
+                <a href="{{ url_for('director.view_schedule') }}" class="btn btn-outline-info mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-chart-bar fa-2x mb-3 text-secondary"></i>
+                <h5 class="card-title">Статистика</h5>
+                <a href="{{ url_for('director.view_statistics') }}" class="btn btn-outline-secondary mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col">
+    <div class="card h-100 shadow-sm border-0">
+        <div class="card-body text-center">
+            <i class="fas fa-user-circle fa-2x mb-3 text-primary"></i>
+            <h5 class="card-title">Моят профил</h5>
+            <a href="{{ url_for('director.manage_profile') }}" class="btn btn-outline-primary mt-2">Редактирай</a>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

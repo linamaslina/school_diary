@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Моята програма{% endblock %}
+
+{% block content %}
+<h2>Моята програма</h2>
+
+<table class="table table-bordered text-center">
+    <thead class="thead-dark">
+        <tr>
+            <th>Час</th>
+            {% for day in range(1, 6) %}
+                <th>{{ day | day_of_week_display }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for hour in range(1, 8) %}
+        <tr>
+            <td><strong>{{ hour }} час</strong></td>
+            {% for day in range(1, 6) %}
+                {% set entry = schedule[hour][day] %}
+                <td>
+                    {% if entry %}
+                        <div><strong>{{ entry.course.name }}</strong></div>
+                        <div>клас {{ entry.classroom.grade }}{{ entry.classroom.letter }}</div>
+                    {% else %}
+                        —
+                    {% endif %}
+                </td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<a href="{{ url_for('teacher.teacher_dashboard') }}" class="btn btn-secondary mt-3">Назад</a>
+{% endblock %}

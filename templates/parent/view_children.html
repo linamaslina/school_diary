@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Децата Ви</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  {% for child in children %}
+  <div class="bg-white shadow rounded-2xl p-4">
+    <h3 class="text-xl font-bold mb-2">{{ child.user.first_name }} {{ child.user.last_name }}</h3>
+    <p><strong>Клас:</strong> {{ child.classroom.grade }}{{ child.classroom.letter }}</p>
+    <p><strong>Училище:</strong> {{ child.classroom.school.name }}</p>
+
+    <hr class="my-2">
+
+    <p><strong>Класен ръководител:</strong>
+      {{ child.classroom.class_teacher.user.first_name }}
+      {{ child.classroom.class_teacher.user.last_name }}
+    </p>
+    <p><strong>Имейл:</strong> <a href="mailto:{{ child.classroom.class_teacher.user.email }}" class="text-blue-600 hover:underline">
+      {{ child.classroom.class_teacher.user.email }}</a></p>
+    <p><strong>Телефон:</strong> {{ child.classroom.class_teacher.user.phone_number }}</p>
+
+    <hr class="my-2">
+    <p><strong>Код за споделяне:</strong> {{ child.share_code }}</p>
+  </div>
+  {% endfor %}
+</div>
+
+<div class="mt-4">
+  <a href="{{ url_for('parent.parent_dashboard') }}" class="btn btn-secondary">
+    <i class="fas fa-arrow-left me-1"></i>Назад
+  </a>
+</div>
+{% endblock %}

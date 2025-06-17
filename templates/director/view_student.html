@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Детайли за ученик{% endblock %}
+
+{% block content %}
+<h2>Данни за ученик</h2>
+
+<ul class="list-group mb-3">
+    <li class="list-group-item"><strong>Име:</strong> {{ student.user.first_name }}</li>
+    <li class="list-group-item"><strong>Презиме:</strong> {{ student.user.middle_name }}</li>
+    <li class="list-group-item"><strong>Фамилия:</strong> {{ student.user.last_name }}</li>
+    <li class="list-group-item"><strong>Дата на раждане:</strong> {{ student.user.birth_date.strftime('%d.%m.%Y') if student.user.birth_date else '—' }}</li>
+    <li class="list-group-item"><strong>Телефонен номер:</strong> {{ student.user.phone_number or '—' }}</li>
+    <li class="list-group-item"><strong>Email:</strong> {{ student.user.email or '—' }}</li>
+    <li class="list-group-item"><strong>Клас:</strong> {{ student.classroom.grade }}{{ student.classroom.letter }}</li>
+    <li class="list-group-item"><strong>Класен ръководител:</strong>
+        {% if class_teacher %}
+        {{ class_teacher.first_name }} {{ class_teacher.last_name }} ({{ class_teacher.email }})
+    {% else %}
+        Няма назначен класен ръководител за този клас.
+    {% endif %}</li>
+</ul>
+
+{% if student.parents %}
+<h4>Родители</h4>
+<ul class="list-group mb-3">
+    {% for parent in student.parents %}
+    <li class="list-group-item">
+        <strong>{{ parent.user.first_name }} {{ parent.user.last_name }}</strong><br>
+        Email: {{ parent.user.email or '—' }}<br>
+        Телефон: {{ parent.user.phone_number or '—' }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Няма въведени родители.</p>
+{% endif %}
+
+<h4>Оценки</h4>
+
+<form method="get" class="form-inline mb-3">
+    <label for="course_id">Филтрирай по предмет:</label>
+    <select name="course_id" id="course_id" class="form-control ml-2 mr-2">
+        <option value="">Всички предмети</option>
+        {% for course in courses %}
+            <option value="{{ course.id }}" {% if course.id == selected_course %}selected{% endif %}>{{ course.name }}</option>
+        {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-primary">Филтрирай</button>
+    <a href="{{ url_for('director.view_details_student', student_id=student.id) }}" class="btn btn-secondary ml-2">Изчисти</a>
+</form>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Предмет</th>
+            <th>Оценка</th>
+            <th>Дата</th>
+            <th>Учител</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for grade in grades %}
+        <tr>
+            <td>{{ grade.course.name }}</td>
+            <td>{{ grade.value }}</td>
+            <td>{{ grade.date.strftime('%d.%m.%Y') }}</td>
+            <td>
+                {% if grade.teacher %}
+                    {{ grade.teacher.user.first_name }} {{ grade.teacher.user.last_name }}
+                {% else %}
+                    —
+                {% endif %}
+            </td>
+        </tr>
+        {% else %}
+        <tr>
+            <td colspan="4">Няма оценки.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h4>Отсъствия</h4>
+<ul class="list-group mb-3">
+<li class="list-group-item"><p>Извинени отсъствия: {{ excused_count }}</p></li>
+<li class="list-group-item"><p>Неизвинени отсъствия: {{ unexcused_count }}</p></li>
+</ul>
+<a href="{{ url_for('director.director_students') }}" class="btn btn-secondary">Назад</a>
+{% endblock %}

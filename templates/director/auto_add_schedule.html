@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Автоматично добавяне на учебни часове</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+            {{ form.classroom.label(class="form-label") }}
+            {{ form.classroom(class="form-control") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.course.label(class="form-label") }}
+            {{ form.course(class="form-control", id="course") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.teacher.label(class="form-label") }}
+            {{ form.teacher(class="form-control", id="teacher") }}
+        </div>
+
+        <div class="form-group">
+            {{ form.hours_per_week.label(class="form-label") }}
+            {{ form.hours_per_week(class="form-control", min="1") }}
+        </div>
+
+        <div class="form-check mt-3">
+            {{ form.same_day_allowed(class="form-check-input") }}
+            {{ form.same_day_allowed.label(class="form-check-label") }}
+        </div>
+
+        <div class="form-group mt-3">
+            {{ form.max_per_day.label(class="form-label") }}
+            {{ form.max_per_day(class="form-control", min="1", max="8") }}
+        </div>
+
+        <button type="submit" class="btn btn-primary mt-4">Добави автоматично</button>
+    </form>
+    <a href="{{ url_for('director.director_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Назад
+    </a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const courseSelect = document.getElementById('course');
+    const teacherSelect = document.getElementById('teacher');
+    const schoolId = "{{ director.school_id }}";
+
+    if (!courseSelect || !teacherSelect) {
+        console.error('Не са намерени елементи с id "course" или "teacher"');
+        return;
+    }
+
+    courseSelect.addEventListener('change', function () {
+        const courseId = this.value;
+        console.log('Избран предмет:', courseId);
+
+        if (!courseId) {
+            teacherSelect.innerHTML = '<option value="">Изберете предмет първо</option>';
+            console.log('Няма избран предмет, изчистих списъка с учители');
+            return;
+        }
+
+        fetch(`/director/get_teachers_by_course/${courseId}?school_id=${schoolId}`)
+            .then(response => {
+                console.log('Fetch заявка към backend, статус:', response.status);
+                if (!response.ok) {
+                    throw new Error('Грешка при зареждане на учители');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Получени учители:', data);
+                teacherSelect.innerHTML = '';
+
+                if (data.length === 0) {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'Няма учители за този предмет';
+                    teacherSelect.appendChild(option);
+                    return;
+                }
+
+                data.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher.id;
+                    option.textContent = teacher.name;
+                    teacherSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                teacherSelect.innerHTML = '<option value="">Грешка при зареждане</option>';
+            });
+    });
+
+    // За да видим дали при зареждане има избран предмет и да заредим учителите за него
+    if (courseSelect.value) {
+        
+        courseSelect.dispatchEvent(new Event('change'));
+    }
+});
+
+</script>
+{% endblock %}
+
+
+

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Табло на родител{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Табло на родител</h2>
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <!-- Моите деца -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-child fa-2x mb-3 text-primary"></i>
+                <h5 class="card-title">Моите деца</h5>
+                <a href="{{ url_for('parent.view_children') }}" class="btn btn-outline-primary mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Оценки -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-star fa-2x mb-3 text-success"></i>
+                <h5 class="card-title">Оценки</h5>
+                <a href="{{ url_for('parent.view_grades') }}" class="btn btn-outline-success mt-2">Виж оценки</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Отсъствия -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-user-times fa-2x mb-3 text-danger"></i>
+                <h5 class="card-title">Отсъствия</h5>
+                <a href="{{ url_for('parent.view_absences') }}" class="btn btn-outline-danger mt-2">Виж отсъствия</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Моят профил -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-user fa-2x mb-3 text-info"></i>
+                <h5 class="card-title">Моят профил</h5>
+                <a href="{{ url_for('parent.parent_profile') }}" class="btn btn-outline-info mt-2">Редактирай</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

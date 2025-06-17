@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block title %}Добавяне на преподавател{% endblock %}
+
+{% block content %}
+<h2>Добавяне на преподавател</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.first_name.label(class="form-label") }}
+        {{ form.first_name(class="form-control", placeholder="Име", readonly="readonly" if readonly else None) }}
+        {% for error in form.first_name.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+
+    <div class="mb-3">
+        {{ form.middle_name.label(class="form-label") }}
+        {{ form.middle_name(class="form-control", placeholder="Презиме") }}
+        {% for error in form.middle_name.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.last_name.label(class="form-label") }}
+        {{ form.last_name(class="form-control", placeholder="Фамилия") }}
+        {% for error in form.last_name.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+    </div>
+
+    <!-- <div class="mb-3">
+        {{ form.password.label(class="form-label") }}
+        {{ form.password(class="form-control", placeholder="Парола") }}
+        {% for error in form.password.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %} -->
+    </div>
+
+    <div class="mb-3">
+        {{ form.courses.label(class="form-label") }}
+        {{ form.courses(class="form-select", multiple=True) }}
+        {% for error in form.courses.errors %}
+            <div class="text-danger">{{ error }}</div>
+        {% endfor %}
+        <small class="form-text text-muted">Задръж Ctrl (Cmd) за множествен избор</small>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Добави</button>
+    <a href="{{ url_for('director.director_teachers') }}" class="btn btn-secondary">Отказ</a>
+</form>
+{% endblock %}

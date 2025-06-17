@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Добави клас към {{ school.name }}{% endblock %}
+{% block content %}
+<h2>Добави клас към {{ school.name }}</h2>
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Клас (1–12)</label>
+    <select name="grade" class="form-select">
+      {% for g in range(1, 13) %}
+      <option value="{{ g }}">{{ g }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Паралелка (А–Г)</label>
+    <select name="letter" class="form-select">
+      {% for letter in ['А', 'Б', 'В', 'Г'] %}
+      <option value="{{ letter }}">{{ letter }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <button type="submit" class="btn btn-success">Добави клас</button>
+</form>
+<a href="{{ url_for('manage_schools') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Управление на потребители{% endblock %}
+
+{% block content %}
+<h2>Управление на потребители</h2><br>
+<a href="{{ url_for('admin.add_user') }}" class="btn btn-primary" >Добави нов потребител</a>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Потребителско име</th>
+            <th>Име</th>
+            <th>Презиме</th>
+            <th>Фамилия</th>
+            <th>Роля</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.first_name }}</td>
+            <td>{{ user.middle_name }}</td>
+            <td>{{ user.last_name }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+                <a href="{{ url_for('admin.view_user', user_id=user.id) }}" class="btn btn-info btn-sm">Детайли</a>
+                <a href="{{ url_for('admin.edit_user', user_id=user.id) }}" class="btn btn-warning btn-sm">Редактирай</a>
+                <form action="{{ url_for('admin.delete_user', user_id=user.id) }}" method="post" onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този потребител?');">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                    <button class="btn btn-danger btn-sm"> Изтрий</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        
+    </tbody>
+</table>
+
+<a href="{{ url_for('admin.admin_dashboard_view') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

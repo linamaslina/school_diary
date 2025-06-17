@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Управление на предмети{% endblock %}
+
+{% block content %}
+<h2>Управление на предмети</h2>
+
+<form method="POST" class="form-inline mb-4">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <input type="text" name="name" class="form-control mr-2" placeholder="Име на предмета" required>
+  <button type="submit" class="btn btn-primary">Добави предмет</button>
+</form>
+
+<hr>
+
+{% if courses %}
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Име на предмет</th>
+      <th>Действия</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in courses %}
+    <tr>
+      <td>{{ course.name }}</td>
+      <td>
+        <form action="{{ url_for('admin.delete_course', course_id=course.id) }}" method="post" style="display:inline;">
+          <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Сигурни ли сте, че искате да изтриете този предмет?');">Изтрий</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p>Няма добавени предмети.</p>
+{% endif %}
+
+<a href="{{ url_for('admin.admin_dashboard_view') }}" class="btn btn-secondary mt-3">⬅ Назад</a>s
+{% endblock %}

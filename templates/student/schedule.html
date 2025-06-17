@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block title %}Моята програма{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Седмична програма</h2>
+
+{% if not classroom %}
+    <div class="alert alert-warning">Все още не си разпределен в клас и нямаш учебна програма.</div>
+{% elif schedule_entries|length == 0 %}
+    <div class="alert alert-info">Нямаш въведена програма за този клас.</div>
+{% else %}
+    <table class="table table-bordered text-center">
+        <thead class="table-secondary">
+            <tr>
+                <th>Час/Ден</th>
+                <th>Понеделник</th>
+                <th>Вторник</th>
+                <th>Сряда</th>
+                <th>Четвъртък</th>
+                <th>Петък</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for hour in range(1, 8) %}
+            <tr>
+                <th>{{ hour }}</th>
+                {% for day in range(1, 6) %}
+                    <td>
+                        {% set entry = schedule_matrix[hour][day] %}
+                        {% if entry %}
+                            {{ entry.course.name }}<br>
+                            <small>{{ entry.teacher.user.first_name }} {{ entry.teacher.user.last_name }}</small>
+                        {% else %}
+                            -
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<a href="{{ url_for('student.student_dashboard') }}" class="btn btn-secondary mt-3">
+    <i class="fas fa-arrow-left"></i> Назад
+</a>
+{% endblock %}

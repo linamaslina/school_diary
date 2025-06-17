@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}Родители{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Списък с родители</h2>
+
+{% if parents %}
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover">
+            <thead class="table-light">
+                <tr>
+                    <th>Име на родител</th>
+                    <th>Имейл</th>
+                    <th>Деца</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for parent in parents %}
+                <tr>
+                    <td>{{ parent.user.first_name }} {{ parent.user.last_name }}</td>
+                    <td>{{ parent.user.email }}</td>
+                    <td>
+                        <ul class="mb-0">
+                            {% for student in parent.children %}
+                                <li>{{ student.user.first_name }} {{ student.user.last_name }}– 
+                                    {{ student.classroom.grade }}{{ student.classroom.letter }}
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% else %}
+    <p>Няма намерени родители за това училище.</p>
+{% endif %}
+<div class="mt-4">
+    <a href="{{ url_for('director.director_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Назад
+    </a>
+</div>
+{% endblock %}

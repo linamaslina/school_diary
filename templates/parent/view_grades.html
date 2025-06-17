@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<h2 class="mb-4">Оценки на децата</h2>
+
+{% for child, grades in grades_by_child.items() %}
+  <div class="mb-6 p-4 bg-gray-100 rounded-2xl">
+    <h3 class="text-lg font-semibold">{{ child.user.first_name }} {{ child.user.last_name }}</h3>
+    {% if grades %}
+      <ul class="list-disc pl-6 mt-2">
+        {% for grade in grades %}
+        <li>
+          Предмет: {{ grade.course.name }} | Оценка: {{ grade.value }} | Дата: {{ grade.date.strftime('%d.%m.%Y') }}
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="text-gray-500">Няма въведени оценки.</p>
+    {% endif %}
+  </div>
+  <div class="mt-4">
+    <a href="{{ url_for('parent.parent_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i>Назад
+    </a>
+</div>
+{% endfor %}
+{% endblock %}

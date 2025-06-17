@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}Админ табло{% endblock %}
+{% block content %}
+<div class="container-fluid mt-4">
+    <div class="row">
+
+        <div class="col-md-3 col-lg-2 mb-4">
+            <div class="list-group shadow-sm">
+                <a href="{{ url_for('admin.manage_users') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-users me-2"></i> Потребители
+                </a>
+                <a href="{{ url_for('admin.add_school') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-school me-2"></i> Добави училище
+                </a>
+                <a href="{{ url_for('admin.manage_schools') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-building-columns me-2"></i> Училища
+                </a>
+                <a href="{{ url_for('admin.manage_courses') }}" class="list-group-item list-group-item-action">
+                    <i class="fas fa-book-open me-2"></i> Предмети
+                </a>
+                <a href="{{ url_for('admin.view_statistics') }}"  class="list-group-item list-group-item-action">
+                    <i class="fas fa-chart-bar me-2"></i> Статистика
+                </a>
+            </div>
+        </div>
+
+        <!-- Main content -->
+        <div class="col-md-9 col-lg-10">
+            <h2 class="mb-4">Добре дошли в администраторския панел</h2>
+
+            <div class="alert alert-info shadow-sm">
+                <i class="fas fa-circle-info me-1"></i> Изберете действие от менюто вляво.
+            </div>
+
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                <!-- Карти с бърз достъп -->
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-users fa-2x text-primary mb-3"></i>
+                            <h5 class="card-title">Потребители</h5>
+                            <a href="{{ url_for('admin.manage_users') }}" class="btn btn-outline-primary w-100">Управлявай</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-school fa-2x text-success mb-3"></i>
+                            <h5 class="card-title">Добави училище</h5>
+                            <a href="{{ url_for('admin.add_school') }}" class="btn btn-outline-success w-100">Добави</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body text-center">
+                            <i class="fas fa-book-open fa-2x text-info mb-3"></i>
+                            <h5 class="card-title">Предмети</h5>
+                            <a href="{{ url_for('admin.manage_courses') }}" class="btn btn-outline-info w-100">Прегледай</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Статистика -->
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-body text-center">
+                            <i class="fas fa-chart-pie fa-2x mb-3 text-secondary"></i>
+                            <h5 class="card-title">Статистика</h5>
+                            <a href="{{ url_for('admin.view_statistics') }}" class="btn btn-outline-secondary mt-2">Прегледай</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

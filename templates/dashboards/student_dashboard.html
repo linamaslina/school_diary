@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Табло на ученик{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Табло на ученик</h2>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+
+    <!-- Оценки -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-star fa-2x mb-3 text-primary"></i>
+                <h5 class="card-title">Оценки</h5>
+                <a href="{{ url_for('student.manage_grades') }}" class="btn btn-outline-primary mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Отсъствия -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-user-times fa-2x mb-3 text-danger"></i>
+                <h5 class="card-title">Отсъствия</h5>
+                <a href="{{ url_for('student.manage_absences') }}" class="btn btn-outline-danger mt-2">Прегледай</a>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Програма (Разписание) -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-calendar-alt fa-2x mb-3 text-success"></i>
+                <h5 class="card-title">Програма</h5>
+                <a href="{{ url_for('student.view_schedule', classroom_id=classroom.id) }}" class="btn btn-outline-success mt-2">Виж</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Моят профил -->
+    <div class="col">
+        <div class="card h-100 shadow-sm border-0">
+            <div class="card-body text-center">
+                <i class="fas fa-user fa-2x mb-3 text-info"></i>
+                <h5 class="card-title">Моят профил</h5>
+                <a href="{{ url_for('student.profile') }}" class="btn btn-outline-info mt-2">Редактирай</a>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

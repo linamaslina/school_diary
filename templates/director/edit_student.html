@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Редакция на ученик{% endblock %}
+
+{% block content %}
+<h2>Редакция на ученик</h2>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group mb-3">
+        <label>Име</label>
+        <input type="text" name="first_name" class="form-control" value="{{ student.user.first_name }}" readonly>
+    </div>
+    <div class="form-group mb-3">
+        <label>Презиме</label>
+        <input type="text" name="middle_name" class="form-control" value="{{ student.user.middle_name }}" readonly>
+    </div>
+    <div class="form-group mb-3">
+        <label>Фамилия</label>
+        <input type="text" name="last_name" class="form-control" value="{{ student.user.last_name }}" readonly>
+    </div>
+    <div class="form-group mb-3">
+        <label>Клас</label>
+        <select name="classroom_id" class="form-control" required>
+            {% for classroom in classrooms %}
+                <option value="{{ classroom.id }}" {% if student.classroom_id == classroom.id %}selected{% endif %}>
+                    {{ classroom.grade }}{{ classroom.letter }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Запази</button>
+    <a href="{{ url_for('director.director_students') }}" class="btn btn-secondary"> Назад</a>
+</form>
+{% endblock %}

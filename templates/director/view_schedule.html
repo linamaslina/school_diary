@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Преглед на разписанието{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card shadow border-0 p-4">
+        <h2 class="text-center mb-4"><i class="fas fa-calendar-alt text-info me-2"></i>Седмична програма</h2>
+
+        <form method="POST" class="mb-4">
+            {{ form.hidden_tag() }}
+            <div class="row g-3 align-items-end">
+                <div class="col-md-6">
+                    <label class="form-label">{{ form.classroom.label.text }}</label>
+                    {{ form.classroom(class="form-select") }}
+                </div>
+                <div class="col-md-6 text-end">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-eye me-1"></i> Покажи разписанието
+                    </button>
+                    {% if selected_classroom %}
+                        <a href="{{ url_for('director.add_schedule', classroom_id=selected_classroom.id) }}" class="btn btn-success ms-2">
+                            <i class="fas fa-plus me-1"></i> Добави час
+                        </a>
+                        <a href="{{ url_for('director.auto_add_schedule_view') }}" class="btn btn-secondary ms-2">
+                            <i class="fas fa-magic me-1"></i> Автоматично добавяне
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </form>
+
+        {% if schedule %}
+            {% set max_hour = schedule | map(attribute='hour') | max %}
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center shadow-sm">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="bg-info text-white">Час</th>
+                            {% for day in range(1, 6) %}
+                                <th class="bg-info text-white">{{ day_names[day] }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for hour in range(1, max_hour + 1) %}
+                            <tr>
+                                <th class="bg-light">{{ hour }}</th>
+                                {% for day in range(1, 6) %}
+                                    {% set entry = schedule | selectattr("day_of_week", "equalto", day)
+                                                            | selectattr("hour", "equalto", hour)
+                                                            | list | first %}
+                                    <td>
+                                        {% if entry %}
+                                            <div class="fw-bold">{{ entry.course.name }}</div>
+                                            <div class="small text-muted">
+                                                {{ entry.teacher.user.first_name }} {{ entry.teacher.user.last_name }}
+                                            </div>
+                                            <div class="d-grid gap-2 mt-2">
+                                                <a href="{{ url_for('director.edit_schedule', schedule_id=entry.id) }}"
+                                                   class="btn btn-warning btn-sm">
+                                                    <i class="fas fa-edit me-1"></i>Редакция
+                                                </a>
+                                                <a href="{{ url_for('director.delete_schedule', schedule_id=entry.id) }}"
+                                                   class="btn btn-danger btn-sm"
+                                                   onclick="return confirm('Сигурни ли сте, че искате да изтриете този час?');">
+                                                    <i class="fas fa-trash me-1"></i>Изтрий
+                                                </a>
+                                            </div>
+                                        {% else %}
+                                            <span class="text-muted">–</span>
+                                        {% endif %}
+                                    </td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-muted text-center mt-4">Няма налично разписание за избрания клас.</p>
+        {% endif %}
+    </div>
+</div>
+<div class="mt-4">
+    <a href="{{ url_for('director.director_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Назад
+    </a>
+</div>
+{% endblock %}

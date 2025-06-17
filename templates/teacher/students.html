@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}Ученици{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Моите ученици</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Име</th>
+                <th>Клас</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.user.first_name }} {{ student.user.last_name }}</td>
+                <td>{{ student.classroom.grade }}{{ student.classroom.letter }}</td>
+                <td>
+                    <a href="{{ url_for('teacher.student_detail', student_id=student.id) }}" class="btn btn-sm btn-info">
+                        Детайли
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
+    <a href="{{ url_for('teacher.teacher_dashboard') }}" class="btn btn-secondary"><i class="fas fa-arrow-left me-1"></i>Назад</a>
+</div>
+{% endblock %}

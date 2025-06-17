@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Добавяне на потребител{% endblock %}
+
+{% block content %}
+<h2>Добавяне на потребител</h2>
+
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div class="mb-3">
+        {{ form.role.label(class="form-label") }}
+        {{ form.role(class="form-select", id="role-select") }}
+    </div>
+    <div class="mb-3">
+        {{ form.first_name.label }} {{ form.first_name(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.middle_name.label }} {{ form.middle_name(class="form-control") }}
+    </div>
+    <div class="mb-3">
+        {{ form.last_name.label }} {{ form.last_name(class="form-control") }}
+    </div>
+    <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.phone_number.label(class="form-label") }}
+        {{ form.phone_number(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.date_of_birth.label(class="form-label") }}
+        {{ form.date_of_birth(class="form-control", type="date") }}
+    </div>
+
+    <!--Според ролята-->
+    <div class="mb-3" id="student-fields">
+        <label for="student_school_id" class="form-label">Училище</label>
+        <select id="student-school-select" name="student_school_id" class="form-select">
+            {% for school in schools %}
+                <option value="{{ school.id }}"
+                    {% if student_school_id == school.id %}selected{% endif %}>
+                    {{ school.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <label for="classroom_id" class="form-label mt-2">Клас</label>
+        <select id="student-classroom-select" name="classroom_id" class="form-select">
+            {% for classroom in classrooms %}
+                <option value="{{ classroom.id }}" data-school="{{ classroom.school_id }}">
+                    {{ classroom.grade }}{{ classroom.letter }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+
+    <div id="teacher-fields" style="display: none;">
+        <label for="teacher_school_id">Избери училище:</label>
+        <select name="teacher_school_id" class="form-select">
+            {% for school in schools %}
+                <option value="{{ school.id }}">{{ school.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Избери предмети, които ще преподава:</label>
+        {% for course in courses %}
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="teacher_course_ids" value="{{ course.id }}" id="course{{ course.id }}">
+                <label class="form-check-label" for="course{{ course.id }}">{{ course.name }}</label>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div id="parent-fields" style="display: none;">
+        <div class="mb-3">
+            <label for="share-code-input" class="form-label">Код на ученик</label>
+            <input type="text" id="share-code-input" name="share_code" class="form-control" placeholder="Въведи код на ученик">
+        </div>
+    </div>
+
+    <div id="director-fields" style="display: none;">
+        <label for="school_id" class="form-label">Избери училище:</label>
+        <select name="school_id" class="form-select">
+            {% for school in schools %}
+                <option value="{{ school.id }}">{{ school.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    {{ form.submit(class="btn btn-primary") }}
+</form>
+
+<script>
+    const roleSelect = document.getElementById('role-select');
+    const studentFields = document.getElementById('student-fields');
+    const teacherFields = document.getElementById('teacher-fields');
+    const parentFields = document.getElementById('parent-fields');
+    const directorFields = document.getElementById('director-fields');
+    const schoolSelect = document.getElementById('student-school-select');
+    const classroomSelect = document.getElementById('student-classroom-select');
+
+    function toggleFields() {
+        const role = roleSelect.value;
+        studentFields.style.display = role === 'student' ? 'block' : 'none';
+        teacherFields.style.display = role === 'teacher' ? 'block' : 'none';
+        parentFields.style.display = role === 'parent' ? 'block' : 'none';
+        directorFields.style.display = role === 'director' ? 'block' : 'none';
+    }
+
+    function clearRoleFields() {
+        studentFields.querySelectorAll("input, select").forEach(input => input.value = '');
+        teacherFields.querySelectorAll("input, select").forEach(input => input.value = '');
+        parentFields.querySelectorAll("input[type=checkbox]").forEach(input => input.checked = false);
+        directorFields.querySelectorAll("select, input").forEach(el => el.value = '');
+    }
+
+    function filterClassroomsBySchool() {
+        const selectedSchoolId = schoolSelect.value;
+
+        Array.from(classroomSelect.options).forEach(option => {
+            const schoolId = option.getAttribute('data-school');
+            if (schoolId === selectedSchoolId) {
+                option.style.display = 'block';
+            } else {
+                option.style.display = 'none';
+            }
+        });
+
+        // Избира първия валиден (видим) клас или нулира селекцията
+        const visibleOptions = Array.from(classroomSelect.options).filter(opt => opt.style.display !== 'none');
+        if (visibleOptions.length > 0) {
+            classroomSelect.value = visibleOptions[0].value;
+        } else {
+            classroomSelect.value = '';
+        }
+    }
+
+    schoolSelect.addEventListener('change', filterClassroomsBySchool);
+
+    roleSelect.addEventListener('change', () => {
+        clearRoleFields();
+        toggleFields();
+        if (roleSelect.value === 'student') {
+            filterClassroomsBySchool();
+        }
+    });
+
+    window.addEventListener('load', () => {
+        toggleFields();
+        if (roleSelect.value === 'student') {
+            filterClassroomsBySchool();
+        }
+    });
+</script> 
+
+<a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

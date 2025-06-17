@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Добави ученик{% endblock %}
+
+{% block content %}
+<h2>Добавяне на ученик</h2>
+
+<form method="POST">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="mb-3">
+        <label class="form-label">Име:</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Клас:</label>
+        <input type="text" name="grade" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">Добави</button>
+</form>
+
+<a href="{{ url_for('manage_students') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

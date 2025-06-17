@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2 class="mb-4">Отсъствия - въвеждане</h2>
+
+<form method="POST" id="absence-form" class="mx-auto" style="max-width: 500px;">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+  <div class="mb-3">
+    <label for="classroom" class="form-label">Избери клас:</label>
+    <select id="classroom" name="classroom_id" class="form-select" required>
+      <option value="">--Избери клас--</option>
+      {% for classroom in classrooms %}
+      <option value="{{ classroom.id }}">{{ classroom.grade }}{{ classroom.letter }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="student" class="form-label">Избери ученик:</label>
+    <select id="student" name="student_id" class="form-select" required disabled>
+      <option value="">--Избери ученик--</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="date" class="form-label">Избери дата:</label>
+    <input type="date" id="date" name="date" class="form-control" required disabled>
+  </div>
+
+  <div class="mb-3">
+    <label for="course" class="form-label">Избери час (предмет):</label>
+    <select id="course" name="course_id" class="form-select" required disabled>
+      <option value="">--Избери час--</option>
+    </select>
+  </div>
+
+  <div class="mb-3">
+    <label for="reason" class="form-label">Причина за отсъствие (по избор):</label>
+    <input type="text" id="reason" name="reason" maxlength="255" class="form-control">
+  </div>
+
+  <div class="form-check mb-4">
+    <input type="checkbox" id="excused" name="excused" value="1" class="form-check-input">
+    <label for="excused" class="form-check-label">Извинено отсъствие</label>
+  </div>
+
+  <button type="submit" class="btn btn-danger w-100" disabled id="submit-btn">Запиши отсъствие</button>
+  <div class="mt-4">
+    <a href="{{ url_for('teacher.teacher_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Назад
+    </a>
+  </div>
+</form>
+
+<script>
+  const classroomSelect = document.getElementById('classroom');
+  const studentSelect = document.getElementById('student');
+  const dateInput = document.getElementById('date');
+  const courseSelect = document.getElementById('course');
+  const submitBtn = document.getElementById('submit-btn');
+
+  classroomSelect.addEventListener('change', async () => {
+    const classroomId = classroomSelect.value;
+
+    studentSelect.innerHTML = '<option value="">--Избери ученик--</option>';
+    courseSelect.innerHTML = '<option value="">--Избери час--</option>';
+    studentSelect.disabled = true;
+    dateInput.value = '';
+    dateInput.disabled = true;
+    courseSelect.disabled = true;
+    submitBtn.disabled = true;
+
+    if (!classroomId) return;
+
+    try {
+      const resp = await fetch(`/teacher/get_students?classroom_id=${classroomId}`);
+      const data = await resp.json();
+
+      if (!data.students || data.students.length === 0) {
+        return;
+      }
+
+      data.students.forEach(student => {
+        const opt = document.createElement('option');
+        opt.value = student.id;
+        opt.textContent = `${student.first_name} ${student.last_name}`;
+        studentSelect.appendChild(opt);
+      });
+
+      studentSelect.disabled = false;
+    } catch (error) {
+      console.error("Грешка при зареждане на ученици:", error);
+    }
+  });
+
+  studentSelect.addEventListener('change', () => {
+    dateInput.disabled = !studentSelect.value;
+    courseSelect.innerHTML = '<option value="">--Избери час--</option>';
+    courseSelect.disabled = true;
+    submitBtn.disabled = true;
+    dateInput.value = '';
+  });
+
+  dateInput.addEventListener('change', async () => {
+    const studentId = studentSelect.value;
+    const date = dateInput.value;
+
+    courseSelect.innerHTML = '<option value="">--Избери час--</option>';
+    courseSelect.disabled = true;
+    submitBtn.disabled = true;
+
+    if (!studentId || !date) return;
+
+    try {
+      const resp = await fetch(`/teacher/get_courses_for_student_date?student_id=${studentId}&date=${date}`);
+      const data = await resp.json();
+
+      if (data.courses.length === 0) {
+        alert('Няма часове за този ден според графика.');
+        return;
+      }
+
+      data.courses.forEach(course => {
+        const opt = document.createElement('option');
+        opt.value = course.id;
+        opt.textContent = course.name;
+        courseSelect.appendChild(opt);
+      });
+
+      courseSelect.disabled = false;
+    } catch (error) {
+      console.error("Грешка при зареждане на предмети:", error);
+    }
+  });
+
+  courseSelect.addEventListener('change', () => {
+    submitBtn.disabled = !courseSelect.value;
+  });
+</script>
+
+{% endblock %}

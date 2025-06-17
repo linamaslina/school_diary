@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Детайли за потребител{% endblock %}
+
+{% block content %}
+<h2>Детайли за потребител</h2>
+<ul class="list-group">
+    <li class="list-group-item"><strong>Потребителско име:</strong> {{ user.username }}</li>
+    <li class="list-group-item"><strong>Име:</strong> {{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}</li>
+    <li class="list-group-item"><strong>Имейл:</strong> {{ user.email }}</li>
+    <li class="list-group-item"><strong>Телефон:</strong> {{ user.phone_number }}</li>
+    <li class="list-group-item"><strong>Дата на раждане:</strong> {{ user.date_of_birth.strftime('%d.%m.%Y') if user.date_of_birth else 'Няма данни' }}</li>
+    <li class="list-group-item"><strong>Роля:</strong> {{ user.role }}</li>
+
+    {% if student %}
+        <li class="list-group-item"><strong>Клас:</strong> {{ student.classroom.grade }}{{ student.classroom.letter }}</li>
+        <li class="list-group-item"><strong>Код за споделяне:</strong> {{ student.share_code }}</li>
+    {% elif parent %}
+        <li class="list-group-item"><strong>Деца:</strong>
+            <ul>
+                {% for child in parent.children %}
+                    <li>{{ child.user.first_name }} {{ child.user.last_name }} – клас: {{ child.classroom.grade }}{{ child.classroom.letter }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% elif teacher %}
+        <li class="list-group-item"><strong>Училище:</strong> {{ teacher.school.name }}</li>
+        <li class="list-group-item">
+            <strong>Класен ръководител:</strong>
+            {% if class_teacher_of %}
+                Да – клас: {{ class_teacher_of.grade }}{{ class_teacher_of.letter }}
+            {% else %}
+                Не
+            {% endif %}
+        </li>
+        <li class="list-group-item"><strong>Предмети:</strong>
+            <ul>
+                {% for course in teacher.courses %}
+                    <li>{{ course.name }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% elif director %}
+        <li class="list-group-item"><strong>Директор на училище:</strong> {{ director.school.name }}</li>
+    {% endif %}
+</ul>
+
+<a href="{{ url_for('admin.manage_users') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

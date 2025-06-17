@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Статистика – Администратор{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Статистика за цялата система</h2>
+
+<div class="mb-4">
+    <h5>Общо оценки: {{ total_grades }}</h5>
+    <h5>Общо отсъствия: {{ total_absences }}</h5>
+</div>
+
+<div class="mb-5">
+    <h4>Оценки по училища</h4>
+    <ul>
+        {% for school, count in grades_by_school %}
+            <li>{{ school }}: {{ count }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div class="mb-5">
+    <h4>Отсъствия по училища</h4>
+    <ul>
+        {% for school, count in absences_by_school %}
+            <li>{{ school }}: {{ count }}</li>
+        {% endfor %}
+    </ul>
+</div>
+
+<div>
+    <h4>Оценки по предмети</h4>
+    <ul>
+        {% for course, count in grades_by_course %}
+            <li>{{ course }}: {{ count }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<h3>Среден успех по училища</h3>
+<table class="table">
+<thead><tr><th>Училище</th><th>Средна оценка</th></tr></thead>
+<tbody>
+{% for school_name, avg_grade in grades_avg_by_school %}
+<tr>
+    <td>{{ school_name }}</td>
+    <td>{{ '%.2f'|format(avg_grade) }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+
+<h3>Среден успех по предмети</h3>
+<table class="table">
+<thead><tr><th>Предмет</th><th>Средна оценка</th></tr></thead>
+<tbody>
+{% for course_name, avg_grade in grades_avg_by_course %}
+<tr>
+    <td>{{ course_name }}</td>
+    <td>{{ '%.2f'|format(avg_grade) }}</td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+<a href="{{ url_for('admin.admin_dashboard_view') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

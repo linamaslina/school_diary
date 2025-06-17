@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Добавяне на ученик{% endblock %}
+
+{% block content %}
+<h2>Добавяне на нов ученик</h2>
+<form method="post">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+        <label>Име</label>
+        <input type="text" name="first_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label>Презиме</label>
+        <input type="text" name="middle_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label>Фамилия</label>
+        <input type="text" name="last_name" class="form-control" required>
+    </div>
+    <div class="form-group">
+        <label>Клас</label>
+        <select name="classroom_id" class="form-control">
+            <option value="">(Без клас / все още неразпределен)</option>
+            {% for classroom in classrooms %}
+                <option value="{{ classroom.id }}">{{ classroom.grade }}{{ classroom.letter }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn btn-success">Добави ученик</button>
+    <a href="{{ url_for('director.director_students') }}" class="btn btn-secondary"> Назад</a>
+</form>
+{% endblock %}

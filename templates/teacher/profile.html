@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}Моят профил{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Редактиране на профил</h2>
+    <form method="POST" action="{{ url_for('teacher.manage_profile') }}">
+        {{ form.hidden_tag() }}
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Потребителско име (не може да се променя)</label>
+            <input type="text" id="username" class="form-control" value="{{ user.username }}" disabled>
+        </div>
+
+        <div class="mb-3">
+            {{ form.first_name.label(class="form-label") }}
+            {{ form.first_name(class="form-control", id="first_name") }}
+        </div>
+        <div class="mb-3">
+            {{ form.middle_name.label(class="form-label") }}
+            {{ form.middle_name(class="form-control", id="middle_name") }}
+        </div>
+        <div class="mb-3">
+            {{ form.last_name.label(class="form-label") }}
+            {{ form.last_name(class="form-control", id="last_name") }}
+        </div>
+        <div class="mb-3">
+            {{ form.email.label(class="form-label") }}
+            {{ form.email(class="form-control", id="email") }}
+        </div>
+        <div class="mb-3">
+            {{ form.phone_number.label(class="form-label") }}
+            {{ form.phone_number(class="form-control", id="phone_number") }}
+        </div>
+
+        <hr>
+        <h5>Промяна на парола (по желание)</h5>
+        <div class="mb-3">
+            {{ form.password.label(class="form-label") }}
+            {{ form.password(class="form-control", id="password", placeholder="Оставете празно, ако не желаете да променяте паролата") }}
+        </div>
+        <div class="mb-3">
+            {{ form.confirm_password.label(class="form-label") }}
+            {{ form.confirm_password(class="form-control", id="confirm_password", placeholder="Повторете новата парола") }}
+        </div>
+
+        {{ form.submit(class="btn btn-primary") }}
+    </form>
+</div>
+<div class="mt-4">
+    <a href="{{ url_for('teacher.teacher_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Назад
+    </a>
+</div>
+
+{% endblock %}

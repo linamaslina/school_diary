@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Добави училище{% endblock %}
+{% block content %}
+<h2>Добави училище</h2>
+<form method="POST">
+  {{ form.hidden_tag() }}
+
+  <div class="mb-3">
+    {{ form.name.label(class="form-label") }}
+    {{ form.name(class="form-control") }}
+  </div>
+
+  <div class="mb-3">
+    {{ form.address.label(class="form-label") }}
+    {{ form.address(class="form-control") }}
+  </div>
+   <div class="mb-3">
+    {{ form.city.label(class="form-label") }}
+    {{ form.city(class="form-control") }}
+  </div>
+  <div class="mb-3">
+    {{ form.classrooms.label(class="form-label") }}
+    {{ form.classrooms(class="form-control", placeholder="Напр. 1А, 1Б, 2В") }}
+    <div class="form-text">Въведете класовете, разделени със запетая.</div>
+  </div>
+  {{ form.submit(class="btn btn-primary") }}
+</form>
+
+<a href="{{ url_for('admin.manage_schools') }}" class="btn btn-secondary mt-3">⬅ Назад</a>
+{% endblock %}

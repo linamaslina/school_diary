@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% block title %}Добавяне на час{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Добави час към седмичната програма</h2>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="row">
+            <div class="col-md-5">{{ form.day_of_week.label() }}{{ form.day_of_week(class="form-select") }}</div>
+            <div class="col-md-2">{{ form.hour.label() }}{{ form.hour(class="form-control") }}</div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-md-5">{{ form.classroom.label() }}{{ form.classroom(class="form-select") }}</div>
+            <div class="col-md-5">{{ form.course.label() }}{{ form.course(class="form-select", id="course") }}</div>
+            <div class="col-md-7">{{ form.teacher.label() }}{{ form.teacher(class="form-select", id="teacher") }}</div>
+        </div>
+        <button class="btn btn-success mt-4" type="submit">Запази</button>
+    </form>
+</div>
+<a href="{{ url_for('director.director_dashboard') }}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left me-1"></i> Назад
+    </a>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const courseSelect = document.getElementById('course');
+    const teacherSelect = document.getElementById('teacher');
+    const schoolId = "{{ director.school_id }}";
+
+    if (!courseSelect || !teacherSelect) {
+        console.error('Не са намерени елементи с id "course" или "teacher"');
+        return;
+    }
+
+    courseSelect.addEventListener('change', function () {
+        const courseId = this.value;
+
+        if (!courseId) {
+            teacherSelect.innerHTML = '<option value="">Изберете предмет първо</option>';
+            return;
+        }
+
+        fetch(`/director/get_teachers_by_course/${courseId}?school_id=${schoolId}`)
+            .then(response => response.json())
+            .then(data => {
+                teacherSelect.innerHTML = '';
+                if (data.length === 0) {
+                    const option = document.createElement('option');
+                    option.value = '';
+                    option.textContent = 'Няма учители за този предмет';
+                    teacherSelect.appendChild(option);
+                    return;
+                }
+
+                data.forEach(teacher => {
+                    const option = document.createElement('option');
+                    option.value = teacher.id;
+                    option.textContent = teacher.name;
+                    teacherSelect.appendChild(option);
+                });
+            })
+            .catch(error => {
+                console.error('Fetch error:', error);
+                teacherSelect.innerHTML = '<option value="">Грешка при зареждане</option>';
+            });
+    });
+
+    if (courseSelect.value) {
+        courseSelect.dispatchEvent(new Event('change'));
+    }
+});
+</script>
+
+{% endblock %}
